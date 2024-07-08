@@ -1,6 +1,8 @@
 // Copyright Space Kiwi Studio. All Rights Reserved.
 
 #include "UGitTaggingVersion.h"
+
+#include "ISettingsModule.h"
 #include "UGitTaggingVersion/Classes/UGitTaggingVersionActionBase.h"
 #include "UGitTaggingVersionStyle.h"
 #include "UGitTaggingVersionCommands.h"
@@ -16,9 +18,19 @@ void FUGitTaggingVersionModule::StartupModule()
 {
 	FUGitTaggingVersionStyle::Initialize();
 	FUGitTaggingVersionStyle::ReloadTextures();
-
 	FUGitTaggingVersionCommands::Register();
 
+	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings"))
+	{
+		SettingsModule->RegisterSettings(
+			"Project",
+			"Plugins",
+			"Git Tagging Version",
+			LOCTEXT("RuntimeSettingsName", "Git Tagging Version"),
+			LOCTEXT("RuntimeSettingsDescriptor", "Git Tagging Version Configuration"),
+			GetMutableDefault<UGitTaggingVersionSettings>());
+	}
+	
 	PluginCommands = MakeShareable(new FUICommandList);
 
 	PluginCommands->MapAction(
@@ -33,11 +45,17 @@ void FUGitTaggingVersionModule::StartupModule()
 void FUGitTaggingVersionModule::ShutdownModule()
 {
 	UToolMenus::UnRegisterStartupCallback(this);
-
 	UToolMenus::UnregisterOwner(this);
 
+	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings"))
+	{
+		SettingsModule->UnregisterSettings(
+			"Project",
+			"Plugins",
+			"Git Tagging Version");
+	}
+	
 	FUGitTaggingVersionStyle::Shutdown();
-
 	FUGitTaggingVersionCommands::Unregister();
 }
 

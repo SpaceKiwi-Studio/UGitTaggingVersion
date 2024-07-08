@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Space Kiwi Studio. All Rights Reserved.
 
 #pragma once
 
@@ -6,6 +6,9 @@
 #include "Framework/Commands/Commands.h"
 #include "UGitTaggingVersionStyle.h"
 
+/**
+ * @author Space Kiwi Studio
+ */
 class FUGitTaggingVersionCommands : public TCommands<FUGitTaggingVersionCommands>
 {
 public:

@@ -1,10 +1,12 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Space Kiwi Studio. All Rights Reserved.
 
 #include "UGitTaggingVersion.h"
+#include "UGitTaggingVersion/Classes/UGitTaggingVersionActionBase.h"
 #include "UGitTaggingVersionStyle.h"
 #include "UGitTaggingVersionCommands.h"
 #include "Misc/MessageDialog.h"
 #include "ToolMenus.h"
+#include "UGitTaggingVersionSettings.h"
 
 static const FName UGitTaggingVersionTabName("UGitTaggingVersion");
 
@@ -12,8 +14,6 @@ static const FName UGitTaggingVersionTabName("UGitTaggingVersion");
 
 void FUGitTaggingVersionModule::StartupModule()
 {
-	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
-	
 	FUGitTaggingVersionStyle::Initialize();
 	FUGitTaggingVersionStyle::ReloadTextures();
 
@@ -31,9 +31,6 @@ void FUGitTaggingVersionModule::StartupModule()
 
 void FUGitTaggingVersionModule::ShutdownModule()
 {
-	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
-	// we call this function before unloading the module.
-
 	UToolMenus::UnRegisterStartupCallback(this);
 
 	UToolMenus::UnregisterOwner(this);
@@ -45,36 +42,50 @@ void FUGitTaggingVersionModule::ShutdownModule()
 
 void FUGitTaggingVersionModule::PluginButtonClicked()
 {
-	// Put your "OnButtonClicked" stuff here
-	FText DialogText = FText::Format(
-							LOCTEXT("PluginButtonDialogText", "Add code to {0} in {1} to override this button's actions"),
-							FText::FromString(TEXT("FUGitTaggingVersionModule::PluginButtonClicked()")),
-							FText::FromString(TEXT("UGitTaggingVersion.cpp"))
-					   );
-	FMessageDialog::Open(EAppMsgType::Ok, DialogText);
+	bool bResult = false;
+	FString StdErr = "";
+
+	if (const UGitTaggingVersionSettings* Settings = GetMutableDefault<UGitTaggingVersionSettings>(); Settings != nullptr)
+	{
+		// Check if ActionToTrigger is valid
+		if (Settings->ActionToTrigger != nullptr)
+		{
+			UGitTaggingVersionActionBase* Action = NewObject<UGitTaggingVersionActionBase>(Settings->ActionToTrigger);
+			// Call the OnActionTrigger() function and store the result
+			bResult = Action->OnActionTrigger(StdErr);
+		}
+	}
+
+	if (!bResult)
+	{
+		FFormatOrderedArguments Args;
+		Args.Add(FText::FromString(StdErr));
+		
+		FMessageDialog::Open(
+			EAppMsgType::Ok,
+			FText::Format(
+			LOCTEXT("PluginButtonDialogText", "GitTaggingVersionAction return false. \n Please check : {0}"),
+			Args));
+	}
+
 }
 
 void FUGitTaggingVersionModule::RegisterMenus()
 {
-	// Owner will be used for cleanup in call to UToolMenus::UnregisterOwner
 	FToolMenuOwnerScoped OwnerScoped(this);
 
+	UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.MainMenu.Window");
 	{
-		UToolMenu* Menu = UToolMenus::Get()->ExtendMenu("LevelEditor.MainMenu.Window");
-		{
-			FToolMenuSection& Section = Menu->FindOrAddSection("WindowLayout");
-			Section.AddMenuEntryWithCommandList(FUGitTaggingVersionCommands::Get().PluginAction, PluginCommands);
-		}
+		FToolMenuSection& Section = Menu->FindOrAddSection("WindowLayout");
+		Section.AddMenuEntryWithCommandList(FUGitTaggingVersionCommands::Get().PluginAction, PluginCommands);
 	}
-
+	
+	UToolMenu* ToolbarMenu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.PlayToolBar");
 	{
-		UToolMenu* ToolbarMenu = UToolMenus::Get()->ExtendMenu("LevelEditor.LevelEditorToolBar.PlayToolBar");
+		FToolMenuSection& Section = ToolbarMenu->FindOrAddSection("PluginTools");
 		{
-			FToolMenuSection& Section = ToolbarMenu->FindOrAddSection("PluginTools");
-			{
-				FToolMenuEntry& Entry = Section.AddEntry(FToolMenuEntry::InitToolBarButton(FUGitTaggingVersionCommands::Get().PluginAction));
-				Entry.SetCommandList(PluginCommands);
-			}
+			FToolMenuEntry& Entry = Section.AddEntry(FToolMenuEntry::InitToolBarButton(FUGitTaggingVersionCommands::Get().PluginAction));
+			Entry.SetCommandList(PluginCommands);
 		}
 	}
 }

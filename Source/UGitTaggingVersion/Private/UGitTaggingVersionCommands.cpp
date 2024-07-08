@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Space Kiwi Studio. All Rights Reserved.
 
 #include "UGitTaggingVersionCommands.h"
 

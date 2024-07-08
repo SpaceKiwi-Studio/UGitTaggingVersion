@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Space Kiwi Studio. All Rights Reserved.
 
 #pragma once
 
@@ -8,6 +8,9 @@
 class FToolBarBuilder;
 class FMenuBuilder;
 
+/**
+ * @author Space Kiwi Studio
+ */
 class FUGitTaggingVersionModule : public IModuleInterface
 {
 public:

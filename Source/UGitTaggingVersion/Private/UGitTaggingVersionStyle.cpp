@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Space Kiwi Studio. All Rights Reserved.
 
 #include "UGitTaggingVersionStyle.h"
 #include "UGitTaggingVersion.h"
@@ -43,7 +43,7 @@ TSharedRef< FSlateStyleSet > FUGitTaggingVersionStyle::Create()
 	TSharedRef< FSlateStyleSet > Style = MakeShareable(new FSlateStyleSet("UGitTaggingVersionStyle"));
 	Style->SetContentRoot(IPluginManager::Get().FindPlugin("UGitTaggingVersion")->GetBaseDir() / TEXT("Resources"));
 
-	Style->Set("UGitTaggingVersion.PluginAction", new IMAGE_BRUSH_SVG(TEXT("PlaceholderButtonIcon"), Icon20x20));
+	Style->Set("UGitTaggingVersion.PluginAction", new IMAGE_BRUSH_SVG(TEXT("github-ico"), Icon20x20));
 	return Style;
 }
 

@@ -1,10 +1,13 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Space Kiwi Studio. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Styling/SlateStyle.h"
 
+/**
+ * @author Space Kiwi Studio
+ */
 class FUGitTaggingVersionStyle
 {
 public:

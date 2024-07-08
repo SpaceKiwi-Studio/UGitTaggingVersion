@@ -61,7 +61,8 @@ bool UGitTaggingVersionActionBase::OnActionTrigger(FString& StdErr)
 		TEXT("rev-parse --abbrev-ref HEAD"), *Settings->GitPath,
 		*Settings->RepositoryPath, StdErr); // git rev-parse --abbrev-ref HEAD;
 	const FString CommitCount = ExecuteGitCommand(
-		TEXT("rev-list --count HEAD"), *Settings->GitPath, *Settings->RepositoryPath, StdErr); // git rev-list --count HEAD;
+		TEXT("rev-list --count HEAD"), *Settings->GitPath, *Settings->RepositoryPath,
+		StdErr); // git rev-list --count HEAD;
 	const FString CommitHash = ExecuteGitCommand(
 		TEXT("rev-parse --short HEAD"), *Settings->GitPath, *Settings->RepositoryPath, StdErr); // git rev-parse HEAD;
 	const FString DateTime = GetFormattedDate();

@@ -12,15 +12,15 @@
 class FUGitTaggingVersionCommands : public TCommands<FUGitTaggingVersionCommands>
 {
 public:
-
 	FUGitTaggingVersionCommands()
-		: TCommands<FUGitTaggingVersionCommands>(TEXT("UGitTaggingVersion"), NSLOCTEXT("Contexts", "UGitTaggingVersion", "UGitTaggingVersion Plugin"), NAME_None, FUGitTaggingVersionStyle::GetStyleSetName())
+		: TCommands<FUGitTaggingVersionCommands>(
+			TEXT("UGitTaggingVersion"), NSLOCTEXT("Contexts", "UGitTaggingVersion", "UGitTaggingVersion Plugin"),
+			NAME_None, FUGitTaggingVersionStyle::GetStyleSetName())
 	{
 	}
 
 	// TCommands<> interface
 	virtual void RegisterCommands() override;
 
-public:
-	TSharedPtr< FUICommandInfo > PluginAction;
+	TSharedPtr<FUICommandInfo> PluginAction;
 };
